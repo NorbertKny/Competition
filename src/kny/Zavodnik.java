@@ -25,15 +25,15 @@ public class Zavodnik {
     private boolean tax;
     private int rank;
     
-    public Zavodnik(String name,String surname,int yearOfBirth,int startNumber,int startTime,int finishTime){
+    public Zavodnik(String name,String surname){
         this.name = name;
         this.surname = surname;
-        this.yearOfBirth = yearOfBirth;
-        this.startNumber = startNumber;
-        this.startTime = startTime;
-        this.finishTime = finishTime;
+//        this.yearOfBirth = yearOfBirth;
+//        this.startNumber = startNumber;
+//        this.startTime = startTime;
+//        this.finishTime = finishTime;
     }
-    
+    //**************************************************************************
     public String getName(){
         return name;
     }
@@ -53,6 +53,19 @@ public class Zavodnik {
     public String getClub(){
         return club;
     }
+    
+    public int getStartNumber(){
+        return startNumber;
+    }
+    //**************************************************************************
+    public void setTax(boolean tax){
+        this.tax = tax;
+    }
+    
+    public void setSex(String sex){
+        this.sex = sex;
+    }
         
+    
         
 }

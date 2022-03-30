@@ -15,6 +15,8 @@ public class ZavodnikTest {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Zavodnik test = new Zavodnik("Petr","Adam");
+        System.out.println(test.getName());
+        System.out.println(test.getSurname());
     }
-    
 }
