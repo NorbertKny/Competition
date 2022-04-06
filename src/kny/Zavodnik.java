@@ -57,6 +57,34 @@ public class Zavodnik {
     public int getStartNumber(){
         return startNumber;
     }
+    
+    public int getStartTime(){
+        return startTime;
+    }
+    
+    public int getFinishTime(){
+        return finishTime;
+    }
+    
+    public int getFinalTime(){
+        return finalTime;
+    }
+    
+    public int getYearOfBirth(){
+        return yearOfBirth;
+    }
+    
+    public int getWave(){
+        return wave;
+    }
+    
+    public int getRank(){
+        return rank;
+    }
+    
+    public boolean getTax(){
+        return tax;
+    }
     //**************************************************************************
     public void setTax(boolean tax){
         this.tax = tax;
@@ -65,7 +93,51 @@ public class Zavodnik {
     public void setSex(String sex){
         this.sex = sex;
     }
-        
+    
+     public void setName(String name){
+        this.name = name;
+    }
+    
+    public void setSurname(String surname){
+        this.surname = surname;
+    }
+    
+    public void setCurrentRace(String currentRace){
+        this.currentRace = currentRace;
+    }
+    
+    public void setClub(String club){
+        this.club = club;
+    }
+    
+    public void setStartNumber(int startNumber){
+        this.startNumber = startNumber;
+    }
+    
+    public void setStartTime(int startTime){
+        this.startTime = startTime;
+    }
+    
+    public void setFinishTime(int finishTime){
+        this.finishTime = finishTime;
+    }
+    
+    public void setFinalTime(int finalTime){
+        this.finalTime = finalTime;
+    }
+    
+    public void setYearOfBirth(int yearOfBirth){
+        this.yearOfBirth = yearOfBirth;
+    }
+    
+    public void setWave(int wave){
+        this.wave = wave;
+    }
+    
+    public void setRank(int rank){
+        this.rank = rank;
+    }
+    
     
         
 }
