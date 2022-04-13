@@ -6,6 +6,9 @@ package kny;
 
 //import java.util.ArrayList;
 
+import java.time.LocalDate;
+
+
 /**
  *
  * @author norbert.roland.kny
@@ -21,19 +24,21 @@ public class Zavodnik implements Comparable<Zavodnik>{
     
     private String currentRace;
     private int yearOfBirth;
+    private LocalDate dob;
     private boolean sex;
     private String club;
     private int wave;
     private boolean tax;
     private int rank;
     
+    private static int startNumberCount = 1;
+    
+    
     public Zavodnik(String name,String surname){
         this.name = name;
         this.surname = surname;
-//        this.yearOfBirth = yearOfBirth;
-//        this.startNumber = startNumber;
-//        this.startTime = startTime;
-//        this.finishTime = finishTime;
+        startNumber = startNumberCount = 1;
+        startNumberCount++;
     }
     
     private Zavodnik(String name,String surname, int startNumber){
@@ -61,6 +66,10 @@ public class Zavodnik implements Comparable<Zavodnik>{
         //1 male, 0 female
     }
     
+//    public boolean getSex(){
+//        return sex.toString().charAt(0);
+//    }
+    
     public String getClub(){
         return club;
     }
@@ -80,6 +89,7 @@ public class Zavodnik implements Comparable<Zavodnik>{
     public int getFinalTime(){
         finalTime = finishTime - startTime;
         return finalTime;
+//        if()
     }
     
     public int getYearOfBirth(){
@@ -107,6 +117,14 @@ public class Zavodnik implements Comparable<Zavodnik>{
         //1 male, 0 female
     }
     
+//    public void setSex(char sex){
+//        if(sex =='f' || sex == 'F' |♀4 sex == 'w'){
+//            this.sex = Sex.F;
+//        }else{
+//            this.sex = Sex.M;
+//        }
+//    }
+    
      public void setName(String name){
         this.name = name;
     }
@@ -131,7 +149,10 @@ public class Zavodnik implements Comparable<Zavodnik>{
         this.startTime = startTime;
     }
     
-    public void setFinishTime(int finishTime){
+    public void setFinishTime(int finishTime) throws StartTimeNotSet{
+        if(startTime == 0){
+            throw new StartTimeNotSet("nebyl jeste zadany cas startu");
+        }
         this.finishTime = finishTime;
     }
     
@@ -193,4 +214,6 @@ public class Zavodnik implements Comparable<Zavodnik>{
     public int compareTo(Zavodnik z2){
         return this.surname.compareTo(z2.surname); 
     }
+    
+    
 }
