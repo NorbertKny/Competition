@@ -10,4 +10,5 @@ package kny;
  */
 public interface AreaComputable {
     public double area();
+    public double circum();
 }

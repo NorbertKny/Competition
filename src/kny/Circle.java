@@ -31,5 +31,10 @@ public class Circle implements AreaComputable{
     public double area() {
         return Math.PI*r*r;
     }
+
+    @Override
+    public double circum() {
+        return 2*Math.PI*r;
+    }
     
 }

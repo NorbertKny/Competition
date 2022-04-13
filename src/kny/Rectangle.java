@@ -37,6 +37,11 @@ public class Rectangle implements AreaComputable{
     public double area() {
         return a*b;
     }
+
+    @Override
+    public double circum() {
+        return 2*(a+b);
+    }
     
     
 }
