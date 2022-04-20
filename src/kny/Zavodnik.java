@@ -18,7 +18,8 @@ public class Zavodnik implements Comparable<Zavodnik>{
     private String surname;
     
     private int startNumber;
-    private int startTime;
+    //private int startTime;
+    private Time startTime;
     private int finishTime;
     private int finalTime;
     
@@ -32,6 +33,7 @@ public class Zavodnik implements Comparable<Zavodnik>{
     private int rank;
     
     private static int startNumberCount = 1;
+    private final int registrationNumber = 1;
     
     
     public Zavodnik(String name,String surname){
@@ -145,12 +147,21 @@ public class Zavodnik implements Comparable<Zavodnik>{
         this.startNumber = startNumber;
     }
     
+//    public void setStartTime(int startTime){
+//        this.startTime = startTime;
+//    }
     public void setStartTime(int startTime){
-        this.startTime = startTime;
+        this.startTime = new Time(startTime);
     }
+//    public void setStartTime(int startTime){
+//        this.startTime = new Time(startTime);
+//    }
+//    public void setStartTime(int startTime){
+//        this.startTime = new Time(startTime);
+//    }    
     
     public void setFinishTime(int finishTime) throws StartTimeNotSet{
-        if(startTime == 0){
+        if(startTime == null){
             throw new StartTimeNotSet("nebyl jeste zadany cas startu");
         }
         this.finishTime = finishTime;
