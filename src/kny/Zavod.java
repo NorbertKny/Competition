@@ -4,12 +4,18 @@
  */
 package kny;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 /**
  *
@@ -19,6 +25,38 @@ public class Zavod {
     private ArrayList<Zavodnik> zavodnik;
     private String nameZavod;
     
+    public void loadStart(File startFile) throws FileNotFoundException, IOException{
+        try(BufferedReader br = new BufferedReader(new FileReader(startFile))){
+        String line,firstName,lastName, dob;
+        //int dob;
+        char gender;
+        String[]parts;
+        Zavodnik r;
+        br.readLine(); //preskocim hlavicku
+        while((line = br.readLine()) !=null){
+            parts = line.split("[ ]+");
+            firstName = parts[0];
+            lastName = parts[1];
+            //dob = Integer.parseInt(parts[2]);
+            dob = parts[2];
+            r = new Zavodnik(firstName,lastName);
+            r.setDob(dob);
+            gender = parts[3].charAt(0);
+            zavodnik.add(r);
+        }
+        }
+    }
+    
+    public void loadFinish(File finishFile) throws FileNotFoundException, IOException{
+        try(Scanner in = new Scanner(finishFile)){
+        in.nextLine();   
+            while(in.hasNext()){
+                int number = in.nextInt();
+                finishTime = in.next();
+                findRunner(number).setEndTime(finishTime);
+            }
+        }
+    }    
     public static final Collator co1 = Collator.getInstance(new Locale("cs", "CZ"));
     //public static final Comparator<Zavodnik> COMP_BY_NAME = (Zavodnik r1,Zavodnik r2)-> r1.getSurname().compareTo(r2.getSurname());
     //public static final Comparator<Zavodnik> COMP_BY_NAME = (Zavodnik r1,Zavodnik r2)-> co1.compare(r1.getSurname(),r2.getSurname());
@@ -51,9 +89,9 @@ public class Zavod {
         zavodnik.get(startNumber).setStartTime(startTime);
     }
     
-    public void setZavodnikFinishTime(int startNumber, int finishTime){
-        zavodnik.get(startNumber).setFinishTime(finishTime);
-    }
+//    public void setZavodnikFinishTime(int startNumber, int finishTime){
+//        zavodnik.get(startNumber).setFinishTime(finishTime);
+//    }
     
     public void removeZavodnik(int startNumber){
         //Zavodnik zavodnik = findZavodnik
@@ -127,4 +165,23 @@ public class Zavod {
 //        }
 //        return ;
 //    }
+    public static void main(String[] args) throws IOException {
+        Zavod zavod = new Zavod("Run Czech");
+        try{
+        zavod.loadStart(new File("start.txt"));
+        }catch(FileNotFoundException e){
+            System.out.println("Zadej znovu");
+//        }catch(IOException e){
+//            System.out.println(e.getMessage());
+//        }
+        System.out.println(zavod);
+        
+        zavod.loadFinish(new File("finish.txt"));
+        System.out.println(zavod);
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+        }
+        System.out.println(zavod);
+    }
+    
 }

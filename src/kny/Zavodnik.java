@@ -7,6 +7,7 @@ package kny;
 //import java.util.ArrayList;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 
 /**
@@ -182,6 +183,11 @@ public class Zavodnik implements Comparable<Zavodnik>{
     public void setRank(int rank){
         this.rank = rank;
     }
+
+    public void setDob(LocalDate dob) {
+        this.dob = LocalDate.parse(name, DateTimeFormatter.ISO_DATE); //2022-02-02
+    }
+    
     //--------------------------------------------------------------------------
     @Override
     public String toString(){
