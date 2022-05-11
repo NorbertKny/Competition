@@ -5,10 +5,18 @@
 package kny;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +35,8 @@ public class Zavod {
     
     public void loadStart(File startFile) throws FileNotFoundException, IOException{
         try(BufferedReader br = new BufferedReader(new FileReader(startFile))){
+        ArrayList<Integer> errorLines = new ArrayList<>();
+        int lineNumber = 1;
         String line,firstName,lastName, dob;
         //int dob;
         char gender;
@@ -34,21 +44,33 @@ public class Zavod {
         Zavodnik r;
         br.readLine(); //preskocim hlavicku
         while((line = br.readLine()) !=null){
+            lineNumber++;
             parts = line.split("[ ]+");
             firstName = parts[0];
             lastName = parts[1];
             //dob = Integer.parseInt(parts[2]);
             dob = parts[2];
-            r = new Zavodnik(firstName,lastName);
-            r.setDob(dob);
             gender = parts[3].charAt(0);
+            r = new Zavodnik(firstName,lastName);
+            try{
+            r.setDob(dob);
+            }catch(IllegalArgumentException e){
+                r.setDob("2022-02-03");
+                errorLines.add(lineNumber);
+            }
+//            r.setSex(sex);
             zavodnik.add(r);
         }
+        }
+        if(errorLines.isEmpty()){
+            throw new RuntimeException("chyba na radcich "+errorLines.toString());
+            
         }
     }
     
     public void loadFinish(File finishFile) throws FileNotFoundException, IOException{
         try(Scanner in = new Scanner(finishFile)){
+        //in.useDelimiter(",");
         in.nextLine();   
             while(in.hasNext()){
                 int number = in.nextInt();
@@ -56,7 +78,68 @@ public class Zavod {
                 findRunner(number).setEndTime(finishTime);
             }
         }
-    }    
+    }
+
+    public void saveToFile(File results) throws IOException{
+        try(PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(results)))){
+            //new PrintWriter(new OutputStreamWriter() pouzit kdyz chci kodovani
+            sortByRunTime();
+            for (Zavodnik zavodnik : zavodnik) {
+                pw.print(n+". ");
+                pw.println(zavodnik.toString());
+                n++;
+            }
+        }
+    }
+    
+    public void saveToBinaryFile(File results) throws FileNotFoundException, IOException{
+        try(DataOutputStream out = new DataOutputStream(new FileOutputStream(results,true))){
+            sortByRunTime();
+            for (Zavodnik zavodnik : zavodnik) {
+                out.writeInt(zavodnik.size());
+                out.writeUTF(zavodnik.getName());
+                out.writeInt(zavodnik.getSurname().length());
+                for (int i = 0; i < zavodnik.getSurname().length(); i++) {
+                    out.writeChar(zavodnik.getSurname().charAt(i));                    
+                }
+                out.writeInt(zavodnik.getFinalTime());
+            }
+        }
+    }
+    
+    public String readBinaryResults(File results) throws FileNotFoundException, IOException{
+        StringBuilder sb = new StringBuilder();
+        try(DataInputStream in = new DataInputStream(new FileInputStream(results))){
+            boolean end = false;
+            int nRunners, nLetters, time = 0;
+            int rank = 1;
+            String name = "", surname = "";
+            while(!end){
+                try{
+                    nRunners = in.readInt();
+                    for (int i = 0; i < nRunners; i++) {
+                        //sb.append(rank).append(". ");
+                        name = in.readUTF();
+                        nLetters = in.readInt();
+                        surname = "";
+                        for (int j = 0; j < nLetters; j++) {
+                            surname += in.readChar();
+                            
+                        }
+                        time =in.readInt();
+                        sb.append(String.format("%2d. %10s%10s%10s%n",rank,name, surname, TimeTools.secondsToStringTime(time)));
+                        rank++;
+                    }
+                    rank =1;
+                    sb.append("\n");
+                }catch(EOFException e){
+                    end = true;
+                }
+            }
+        }
+        return sb.toString();
+    }
+    
     public static final Collator co1 = Collator.getInstance(new Locale("cs", "CZ"));
     //public static final Comparator<Zavodnik> COMP_BY_NAME = (Zavodnik r1,Zavodnik r2)-> r1.getSurname().compareTo(r2.getSurname());
     //public static final Comparator<Zavodnik> COMP_BY_NAME = (Zavodnik r1,Zavodnik r2)-> co1.compare(r1.getSurname(),r2.getSurname());
@@ -169,8 +252,10 @@ public class Zavod {
         Zavod zavod = new Zavod("Run Czech");
         try{
         zavod.loadStart(new File("start.txt"));
-        }catch(FileNotFoundException e){
-            System.out.println("Zadej znovu");
+        //}catch(FileNotFoundException e){
+        }catch(RuntimeException e){    
+            //System.out.println("Zadej znovu");
+            System.out.println(e.getMessage());
 //        }catch(IOException e){
 //            System.out.println(e.getMessage());
 //        }
@@ -182,6 +267,13 @@ public class Zavod {
             System.out.println(e.getMessage());
         }
         System.out.println(zavod);
+        
+        zavod.sortByName();
+        System.out.println(zavod);
+        zavod.saveToFile(new File("data"+File.separator+"results.txt"));
+        zavod.saveToBinaryFile(new File("data"+File.separator+"results.dat"));
+        System.out.println(zavod.readBinaryResults(new File("data"+File.separator+"results.dat")));
+        
     }
     
 }

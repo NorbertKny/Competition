@@ -185,7 +185,7 @@ public class Zavodnik implements Comparable<Zavodnik>{
     }
 
     public void setDob(LocalDate dob) {
-        this.dob = LocalDate.parse(name, DateTimeFormatter.ISO_DATE); //2022-02-02
+        this.dob = LocalDate.parse(dob, DateTimeFormatter.ISO_DATE); //2022-02-02
     }
     
     //--------------------------------------------------------------------------
